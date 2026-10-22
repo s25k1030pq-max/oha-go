@@ -1,0 +1,340 @@
+<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data: blob:; base-uri 'none'; form-action 'none'">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oha-Go!</title>
+<style>
+*{box-sizing:border-box}
+:root{--ink:#7a2a20;--red:#c0392b;--cream:#fff4e0;--shadow:rgba(0,0,0,.18)}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,"Hiragino Sans","Noto Sans JP",sans-serif;min-height:100vh;background-image:radial-gradient(circle at 10% 0,#ffe9a8 0,transparent 40%),radial-gradient(circle at 100% 30%,#ffd9d0 0,transparent 35%)}
+.wrap{max-width:720px;margin:0 auto;padding:14px 16px 60px}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid #4d96ff;outline-offset:2px}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.logo{font-size:28px;font-weight:900;letter-spacing:.5px;margin:0}
+.logo span:nth-child(1){color:#e8505b}.logo span:nth-child(2){color:#e07b13}.logo span:nth-child(3){color:#2e9e4f}.logo span:nth-child(4){color:#3d7fe6}.logo span:nth-child(5){color:#9b5fc9}
+.tag{font-size:12px;margin:0;color:#a0522d}
+.lang{background:#fff;border:3px solid #ff6b6b;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;box-shadow:0 3px 0 #ffb3b3;color:var(--red)}
+.lang b{opacity:.4}.lang b.on{opacity:1;text-decoration:underline}
+.hero{display:flex;align-items:center;gap:12px;margin:14px 0 10px}
+.sun{position:relative;width:112px;height:112px;flex:none}
+.sun svg{position:absolute;inset:0;width:100%;height:100%;animation:spin 24s linear infinite}
+.disc{position:absolute;left:18px;top:18px;width:76px;height:76px;border-radius:50%;background:#ffd23f;box-shadow:0 4px 0 #e0a800;display:grid;place-items:center;font-size:42px;line-height:1}
+.disc.pop{animation:pop .5s}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.18) rotate(-6deg)}100%{transform:scale(1)}}
+.bub{position:relative;background:#fff;border:3px solid #ff6b6b;border-radius:20px;padding:12px 16px;font-weight:800;color:var(--red);font-size:17px;line-height:1.4;flex:1}
+.bub:before{content:"";position:absolute;left:-12px;top:50%;margin-top:-9px;border:9px solid transparent;border-right:12px solid #ff6b6b;border-left:0}
+.prog{background:#ffe0d0;height:16px;border-radius:9px;overflow:hidden;margin:6px 0 4px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff6b6b,#ff9f43,#ffd23f);border-radius:9px;transition:width .4s}
+.cnt{text-align:right;font-size:13px;font-weight:700;margin:0 4px 10px;min-height:18px}
+.bar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:10px}
+.pill{background:#fff;border:2px solid #ffb3b3;border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700;box-shadow:0 3px 0 #ffd0c8}
+.pill.on{background:#ff6b6b;color:#fff;border-color:#ff6b6b}
+.grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr);gap:16px}.logo{font-size:34px}.bub{font-size:20px}}
+.grid li{position:relative}
+.card{width:100%;border:3px solid transparent;border-radius:22px;padding:18px 8px 14px;text-align:center;font-weight:800;font-size:17px;color:#fff;background:var(--c);box-shadow:0 5px 0 var(--shadow);transition:transform .12s,box-shadow .12s;position:relative;word-break:break-word}
+.card:active{transform:translateY(4px);box-shadow:0 1px 0 var(--shadow)}
+.card .em{display:block;font-size:44px;line-height:1.1;margin-bottom:6px}
+.card .bd{position:absolute;right:8px;top:8px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.35);display:grid;place-items:center;font-size:16px;color:#fff}
+.card.done{background:#fff;color:var(--c);border-color:var(--c);box-shadow:0 5px 0 var(--c)}
+.card.done .em{animation:pop .4s}
+.card.done .bd{background:var(--c);color:#fff}
+.card.done .nm{text-decoration:line-through;text-decoration-thickness:2px}
+.del{position:absolute;left:-6px;top:-8px;z-index:2;width:38px;height:38px;border-radius:50%;border:3px solid #fff;background:#444;color:#fff;font-size:17px;box-shadow:0 3px 0 var(--shadow);animation:pop .3s}
+.edit .card{animation:wob .5s infinite alternate}
+@keyframes wob{from{transform:rotate(-1.2deg)}to{transform:rotate(1.2deg)}}
+.panel{background:#fff;border-radius:22px;padding:16px;margin-top:20px;box-shadow:0 5px 0 #ffb3b3}
+.panel h2{margin:0 0 10px;font-size:17px;color:var(--red)}
+.row{display:flex;gap:8px}
+input[type=text]{flex:1;min-width:0;font:inherit;font-size:16px;padding:11px 14px;border:3px solid #ffb3b3;border-radius:14px;color:var(--ink);background:#fffaf5}
+.add{background:#ff6b6b;color:#fff;border:0;border-radius:14px;padding:0 18px;font-weight:800;box-shadow:0 4px 0 #c0392b;white-space:nowrap}
+.add:active{transform:translateY(3px);box-shadow:0 1px 0 #c0392b}
+.lbl{font-size:13px;margin:12px 0 6px;font-weight:700;color:#a0522d}
+.emo{display:flex;flex-wrap:wrap;gap:6px}
+.emo button{width:42px;height:42px;font-size:22px;border-radius:12px;border:3px solid #ffe0d0;background:#fff}
+.emo button.on{border-color:#ff6b6b;background:#ffecec}
+.msg{min-height:22px;margin:8px 2px 0;font-size:14px;font-weight:700;color:#2e7d46}
+.msg.err{color:var(--red)}
+.empty{text-align:center;background:#fff;border:3px dashed #ffb3b3;border-radius:24px;padding:22px 16px}
+.empty h2{margin:0 0 4px;font-size:20px}
+.empty p{margin:0 0 12px;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chip{background:#fff7d6;border:2px solid #ffd23f;border-radius:999px;padding:8px 14px;font-weight:700;font-size:15px;box-shadow:0 3px 0 #e0a800}
+#go{position:fixed;inset:0;background:rgba(255,200,80,.94);display:none;place-items:center;z-index:10;text-align:center;padding:20px;overflow:hidden}
+#go.show{display:grid}
+.gobox{position:relative;z-index:2;animation:rise .6s}
+@keyframes rise{from{transform:translateY(40px) scale(.8);opacity:0}}
+.gosun{font-size:120px;line-height:1;display:inline-block;background:#ffd23f;border-radius:50%;width:170px;height:170px;display:grid;place-items:center;margin:0 auto 12px;box-shadow:0 8px 0 #e0a800;animation:wave 1s infinite alternate}
+@keyframes wave{from{transform:rotate(-8deg)}to{transform:rotate(8deg) scale(1.05)}}
+.gobox h2{font-size:34px;margin:0 0 6px;color:var(--red)}
+.gobox p{font-size:17px;font-weight:700;margin:0 0 18px}
+.cf{position:absolute;top:-30px;font-size:26px;animation:fall linear forwards;z-index:1}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1 class="logo" aria-label="Oha-Go!"><span>O</span><span>h</span><span>a</span><span>-</span><span>Go!</span></h1>
+    <p class="tag" data-i18n="tagline"></p>
+  </div>
+  <button class="lang" id="langBtn" data-demo="lang-switch" data-i18n-aria="langAria"><b id="lJa">日本語</b> / <b id="lEn">EN</b></button>
+</header>
+
+<section class="hero" data-demo="sun-area">
+  <div class="sun"><svg viewBox="0 0 112 112" id="rays" aria-hidden="true"></svg><div class="disc" id="face" aria-hidden="true">😊</div></div>
+  <div class="bub" id="bubble" data-demo="sun-bubble" aria-live="polite"></div>
+</section>
+
+<div class="prog" aria-hidden="true"><i id="pbar"></i></div>
+<p class="cnt" id="cnt" data-demo="progress-count"></p>
+
+<div class="bar" id="toolbar">
+  <button class="pill" id="resetBtn" data-demo="uncheck-all" data-i18n="reset"></button>
+  <button class="pill" id="editBtn" data-demo="edit-toggle"></button>
+</div>
+
+<main id="main" data-demo="item-list"></main>
+
+<section class="panel" data-demo="add-panel">
+  <h2 data-i18n="addTitle"></h2>
+  <form id="form" class="row" autocomplete="off">
+    <input type="text" id="name" maxlength="20" data-demo="item-input" data-i18n-ph="ph" data-i18n-aria="nameAria">
+    <button class="add" type="submit" data-demo="add-item" data-i18n="add"></button>
+  </form>
+  <div class="lbl" data-i18n="pickIcon"></div>
+  <div class="emo" id="emo"></div>
+  <div class="msg" id="msg" role="status" aria-live="polite" data-demo="message"></div>
+</section>
+</div>
+
+<div id="go" role="dialog" aria-modal="true" aria-labelledby="goT" data-demo="send-off">
+  <div class="gobox">
+    <div class="gosun">😄</div>
+    <h2 id="goT" data-i18n="goTitle"></h2>
+    <p data-i18n="goText"></p>
+    <button class="add" id="goClose" data-demo="send-off-close" style="padding:13px 26px;font-size:17px" data-i18n="close"></button>
+  </div>
+</div>
+
+<script>
+const I18N={
+ja:{
+title:"Oha-Go! | 朝の持ち物チェック",
+tagline:"おはよう、いってきます！",
+langAria:"言語を切り替える（日本語 / English）",
+bEmpty:"おはよう！まずは持ち物を入れてみてね",
+b0:"おはよう！持ったかな？",
+bSome:"いいね〜！あと{n}こだよ！",
+bAlmost:"もうちょっと！あと{n}こ！",
+bAll:"ぜんぶそろった！いってらっしゃい！",
+count:"{d} / {t} こ そろった",
+countEmpty:"持ち物 0こ",
+reset:"チェックをはずす",
+edit:"✏️ 編集",editDone:"✅ できた",
+addTitle:"持ち物を追加",
+ph:"例：ハンカチ",nameAria:"持ち物の名前",
+add:"＋ 追加",
+pickIcon:"アイコン（えらばなくてもOK）",
+emptyTitle:"まだ持ち物がないよ",
+emptyText:"毎朝持っていくものを入れてみよう。下のボタンをタップするか、自分で書いてね。",
+added:"「{name}」を追加したよ！",
+removed:"「{name}」を削除したよ",
+needName:"持ち物の名前を入れてね",
+dup:"「{name}」はもう入っているよ",
+goTitle:"いってらっしゃい！",
+goText:"ぜんぶそろったね！今日もいい一日に☀️",
+close:"もどる",
+delAria:"{name}を削除",
+cardAria:"{name}",
+stDone:"持った",stTodo:"まだ",
+iconAria:"アイコン {e}"
+},
+en:{
+title:"Oha-Go! | Morning Checklist",
+tagline:"Good morning, let's go!",
+langAria:"Switch language (日本語 / English)",
+bEmpty:"Good morning! Add what you carry out the door.",
+b0:"Good morning! Got everything?",
+bSome:"Nice! Just {n} to go!",
+bAlmost:"Almost there! {n} left!",
+bAll:"All set! Have a great day!",
+count:"{d} of {t} packed",
+countEmpty:"0 items",
+reset:"Uncheck all",
+edit:"✏️ Edit",editDone:"✅ Done",
+addTitle:"Add an item",
+ph:"e.g. Handkerchief",nameAria:"Item name",
+add:"+ Add",
+pickIcon:"Icon (optional)",
+emptyTitle:"Nothing here yet",
+emptyText:"Add the things you take every morning. Tap a button below, or type your own.",
+added:"Added “{name}”!",
+removed:"Removed “{name}”",
+needName:"Please type an item name",
+dup:"“{name}” is already in your list",
+goTitle:"Have a great day!",
+goText:"You've got everything! Enjoy your day ☀️",
+close:"Back",
+delAria:"Delete {name}",
+cardAria:"{name}",
+stDone:"packed",stTodo:"not yet",
+iconAria:"Icon {e}"
+}};
+const SUGGEST=[
+{e:"👛",ja:"財布",en:"Wallet"},{e:"🔑",ja:"鍵",en:"Keys"},{e:"📱",ja:"スマホ",en:"Phone"},
+{e:"💧",ja:"水筒",en:"Water bottle"},{e:"🧣",ja:"ハンカチ",en:"Handkerchief"},{e:"☂️",ja:"折りたたみ傘",en:"Umbrella"}];
+const ICONS=["👛","🔑","📱","💧","☂️","🎒","💻","🔌","🎧","😷","🧴","🍱","🪪","📘"];
+const GUESS=[[/財布|wallet/i,"👛"],[/鍵|かぎ|key/i,"🔑"],[/スマホ|携帯|phone/i,"📱"],[/水|お茶|bottle|water/i,"💧"],[/傘|umbrella/i,"☂️"],[/pc|パソコン|laptop|computer/i,"💻"],[/充電|charger/i,"🔌"],[/イヤホン|earphone|headphone/i,"🎧"],[/マスク|mask/i,"😷"],[/弁当|lunch|bento/i,"🍱"],[/定期|カード|card|pass|id/i,"🪪"],[/本|ノート|book|note/i,"📘"],[/ハンカチ|handkerchief/i,"🧣"]];
+const COLORS=["#e8505b","#3d7fe6","#2e9e4f","#9b5fc9","#e07b13","#0f9d93"];
+const KEY="ohago.v1";
+
+let lang="en",items=[],editing=false,pickedIcon="",lastFace="",msgState=null;
+
+function initLang(){
+  if(window.APP_LANG==="ja"||window.APP_LANG==="en"){lang=window.APP_LANG;return}
+  try{const q=new URLSearchParams(location.search).get("lang");if(q==="ja"||q==="en"){lang=q;return}}catch(e){}
+  try{const s=localStorage.getItem("lang");if(s==="ja"||s==="en"){lang=s;return}}catch(e){}
+  lang="en";
+}
+function t(k,p){let s=(I18N[lang]&&I18N[lang][k])||k;if(p)for(const x in p)s=s.split("{"+x+"}").join(p[x]);return s}
+function today(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+function load(){
+  try{
+    const o=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(o&&Array.isArray(o.items)){items=o.items.filter(i=>i&&i.name);if(o.date!==today())items.forEach(i=>i.done=false)}
+  }catch(e){items=[]}
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({items,date:today()}))}catch(e){}}
+const $=s=>document.querySelector(s);
+
+function buildRays(){
+  let h="";
+  for(let i=0;i<12;i++)h+='<rect x="52" y="2" width="8" height="18" rx="4" fill="#ff9f43" transform="rotate('+(i*30)+' 56 56)"/>';
+  $("#rays").innerHTML=h;
+}
+function faceFor(d,n){
+  if(n===0)return "😊";
+  if(d===0)return "😐";
+  if(d===n)return "😄";
+  return d/n<0.5?"🙂":"😊";
+}
+function setMsg(text,err){
+  const m=$("#msg");m.textContent=text||"";m.className="msg"+(err?" err":"");
+}
+function guess(name){for(const g of GUESS)if(g[0].test(name))return g[1];return "🎒"}
+
+function render(){
+  document.documentElement.lang=lang;
+  document.title=t("title");
+  document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=t(e.dataset.i18n));
+  document.querySelectorAll("[data-i18n-ph]").forEach(e=>e.placeholder=t(e.dataset.i18nPh));
+  document.querySelectorAll("[data-i18n-aria]").forEach(e=>e.setAttribute("aria-label",t(e.dataset.i18nAria)));
+  $("#lJa").className=lang==="ja"?"on":"";$("#lEn").className=lang==="en"?"on":"";
+
+  const n=items.length,d=items.filter(i=>i.done).length;
+  // sun
+  const f=faceFor(d,n),face=$("#face");
+  face.textContent=f;
+  if(f!==lastFace){face.classList.remove("pop");void face.offsetWidth;face.classList.add("pop");lastFace=f}
+  let b;
+  if(n===0)b=t("bEmpty");else if(d===0)b=t("b0");else if(d===n)b=t("bAll");
+  else b=t(n-d<=1?"bAlmost":"bSome",{n:n-d});
+  $("#bubble").textContent=b;
+  $("#pbar").style.width=(n?Math.round(d/n*100):0)+"%";
+  $("#cnt").textContent=n?t("count",{d,t:n}):t("countEmpty");
+
+  // toolbar
+  $("#toolbar").style.display=n?"flex":"none";
+  $("#editBtn").textContent=t(editing?"editDone":"edit");
+  $("#editBtn").classList.toggle("on",editing);
+  $("#editBtn").setAttribute("data-demo","edit-toggle");
+
+  // main
+  const main=$("#main");
+  if(n===0){
+    main.innerHTML='<div class="empty" data-demo="empty-state"><h2>'+esc(t("emptyTitle"))+'</h2><p>'+esc(t("emptyText"))+'</p><div class="chips">'+
+      SUGGEST.map((s,i)=>'<button class="chip" data-sg="'+i+'" data-demo="suggest-chip">'+s.e+" "+esc(s[lang])+'</button>').join("")+'</div></div>';
+  }else{
+    main.innerHTML='<ul class="grid'+(editing?" edit":"")+'">'+items.map((it,i)=>
+      '<li>'+(editing?'<button class="del" data-del="'+it.id+'" data-demo="delete-item" aria-label="'+esc(t("delAria",{name:it.name}))+'">🗑</button>':"")+
+      '<button class="card'+(it.done?" done":"")+'" style="--c:'+COLORS[i%COLORS.length]+'" data-id="'+it.id+'" data-demo="item-card" aria-pressed="'+!!it.done+'" aria-label="'+esc(it.name+" – "+t(it.done?"stDone":"stTodo"))+'">'+
+      '<span class="bd">'+(it.done?"✓":"")+'</span><span class="em">'+esc(it.emoji)+'</span><span class="nm">'+esc(it.name)+'</span></button></li>').join("")+'</ul>';
+  }
+  // emoji picker
+  $("#emo").innerHTML=ICONS.map(e=>'<button type="button" class="'+(e===pickedIcon?"on":"")+'" data-e="'+e+'" data-demo="icon-pick" aria-pressed="'+(e===pickedIcon)+'" aria-label="'+esc(t("iconAria",{e}))+'">'+e+'</button>').join("");
+  // message
+  if(msgState)setMsg(t(msgState.k,msgState.p),msgState.err);
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function say(k,p,err){msgState={k,p,err};setMsg(t(k,p),err)}
+
+function addItem(name,emoji){
+  name=name.trim();
+  if(!name){say("needName",null,true);return false}
+  if(items.some(i=>i.name.toLowerCase()===name.toLowerCase())){say("dup",{name},true);return false}
+  items.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),name,emoji:emoji||guess(name),done:false});
+  save();say("added",{name});render();return true;
+}
+function toggle(id){
+  const it=items.find(i=>i.id===id);if(!it)return;
+  const was=items.length&&items.every(i=>i.done);
+  it.done=!it.done;save();render();
+  const now=items.every(i=>i.done);
+  if(!was&&now){setTimeout(()=>{if(items.length&&items.every(i=>i.done))showGo()},500)}
+}
+function showGo(){
+  const go=$("#go");
+  go.querySelectorAll(".cf").forEach(e=>e.remove());
+  const em=["🎉","⭐","🌟","✨","🎈","🧡","💛"];
+  for(let i=0;i<32;i++){
+    const s=document.createElement("span");s.className="cf";s.textContent=em[i%em.length];
+    s.style.left=Math.random()*100+"%";s.style.animationDuration=(2.5+Math.random()*2.5)+"s";s.style.animationDelay=(Math.random()*1.2)+"s";
+    go.appendChild(s);
+  }
+  go.classList.add("show");$("#goClose").focus();
+}
+function hideGo(){$("#go").classList.remove("show")}
+
+$("#main").addEventListener("click",e=>{
+  const del=e.target.closest("[data-del]");
+  if(del){
+    const it=items.find(i=>i.id===del.dataset.del);
+    items=items.filter(i=>i.id!==del.dataset.del);save();
+    if(!items.length)editing=false;
+    if(it)say("removed",{name:it.name});render();return;
+  }
+  const c=e.target.closest(".card");
+  if(c&&!editing){toggle(c.dataset.id);return}
+  const sg=e.target.closest("[data-sg]");
+  if(sg){const s=SUGGEST[+sg.dataset.sg];addItem(s[lang],s.e)}
+});
+$("#emo").addEventListener("click",e=>{
+  const b=e.target.closest("[data-e]");if(!b)return;
+  pickedIcon=pickedIcon===b.dataset.e?"":b.dataset.e;render();
+});
+$("#form").addEventListener("submit",e=>{
+  e.preventDefault();
+  if(addItem($("#name").value,pickedIcon)){$("#name").value="";pickedIcon="";render()}
+  $("#name").focus();
+});
+$("#editBtn").addEventListener("click",()=>{editing=!editing;render()});
+$("#resetBtn").addEventListener("click",()=>{items.forEach(i=>i.done=false);save();render()});
+$("#goClose").addEventListener("click",hideGo);
+$("#go").addEventListener("click",e=>{if(e.target.id==="go")hideGo()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")hideGo()});
+$("#langBtn").addEventListener("click",()=>{
+  lang=lang==="ja"?"en":"ja";
+  try{localStorage.setItem("lang",lang)}catch(e){}
+  render();
+});
+
+initLang();buildRays();load();render();
+</script>
+</body>
+</html>
